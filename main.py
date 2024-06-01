@@ -1,10 +1,12 @@
+import time
+import random
+import secrets
+from datetime import datetime
 from fastapi import FastAPI, Response, Depends, HTTPException, status
 from fastapi.security import HTTPBasic, HTTPBasicCredentials
-from prometheus_client import Counter, generate_latest, CONTENT_TYPE_LATEST
 from apscheduler.schedulers.background import BackgroundScheduler
-import secrets
+from prometheus_client import Counter, Gauge, Summary, Histogram, generate_latest, CONTENT_TYPE_LATEST
 from celery import Celery
-import time
 
 app = FastAPI()
 
@@ -24,14 +26,11 @@ def schedule_jobs():
 @app.on_event("startup")
 async def startup_event():
     app.state.scheduler = schedule_jobs()
+    API_UPTIME.set_to_current_time()
 
 @app.on_event("shutdown")
 async def shutdown_event():
     app.state.scheduler.shutdown()
-    
-    
-## Endpoints
-#############################################################################################
     
 # Basic Auth
 security = HTTPBasic()
@@ -48,9 +47,14 @@ def authenticate(credentials: HTTPBasicCredentials = Depends(security)):
             headers={"WWW-Authenticate": "Basic"},
         )
     return credentials
-    
-# Create a counter metric
+
+# Create metrics
 REQUEST_COUNT = Counter('request_count', 'Total number of requests')
+REQUEST_ERRORS = Counter('request_errors', 'Total number of errors')
+IN_PROGRESS_REQUESTS = Gauge('in_progress_requests', 'Number of in-progress requests')
+REQUEST_LATENCY = Summary('request_latency_seconds', 'Request latency in seconds')
+REQUEST_LATENCY_HISTOGRAM = Histogram('request_latency_seconds_histogram', 'Request latency in seconds')
+API_UPTIME = Gauge('api_uptime', 'API Uptime in seconds')
 
 @app.get("/metrics")
 def metrics(credentials: HTTPBasicCredentials = Depends(authenticate)):
@@ -60,7 +64,22 @@ def metrics(credentials: HTTPBasicCredentials = Depends(authenticate)):
 @app.get("/")
 def read_root():
     REQUEST_COUNT.inc()
-    return {"message": "Hello, World!"}
+    IN_PROGRESS_REQUESTS.inc()
+    start_time = time.time()
+    try:
+        # Simulate processing time
+        processing_time = random.uniform(0.1, 2.0)
+        time.sleep(processing_time)
+        REQUEST_LATENCY.observe(processing_time)
+        REQUEST_LATENCY_HISTOGRAM.observe(processing_time)
+        return {"message": "Hello, World!"}
+    except Exception:
+        REQUEST_ERRORS.inc()
+        raise
+    finally:
+        IN_PROGRESS_REQUESTS.dec()
+        REQUEST_LATENCY.observe(time.time() - start_time)
+        REQUEST_LATENCY_HISTOGRAM.observe(time.time() - start_time)
 
 if __name__ == "__main__":
     import uvicorn

@@ -26,6 +26,8 @@ services:
     container_name: celery_worker_1
     depends_on:
       - redis
+    ports:
+      - "8001:8001"
     environment:
       - REDIS_URL=redis://redis:6379/0
     command: celery -A celery_worker worker --loglevel=info
@@ -37,6 +39,8 @@ services:
     container_name: celery_worker_2
     depends_on:
       - redis
+    ports:
+      - "8002:8001"
     environment:
       - REDIS_URL=redis://redis:6379/0
     command: celery -A celery_worker worker --loglevel=info
@@ -71,6 +75,7 @@ services:
       - ./prometheus.yml:/etc/prometheus/prometheus.yml
     command:
       - '--config.file=/etc/prometheus/prometheus.yml'
+      - '--storage.tsdb.retention.time=30d'
 
   grafana:
     image: grafana/grafana

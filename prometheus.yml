@@ -9,3 +9,13 @@ scrape_configs:
     basic_auth:
       username: 'admin'
       password: 'password'
+
+  - job_name: 'celery_worker_1'
+    metrics_path: /
+    static_configs:
+      - targets: ['celery_worker_1:8001']
+
+  - job_name: 'celery_worker_2'
+    metrics_path: /
+    static_configs:
+      - targets: ['celery_worker_2:8002']

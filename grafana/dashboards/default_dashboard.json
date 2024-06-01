@@ -43,7 +43,7 @@
                 "x": 0,
                 "y": 0
             },
-            "id": 2,
+            "id": 1,
             "options": {
                 "showHeader": true
             },
@@ -52,12 +52,242 @@
                     "expr": "request_count_total",
                     "format": "time_series",
                     "interval": "",
-                    "legendFormat": "request_count_total",
+                    "legendFormat": "Total Requests",
                     "refId": "A"
                 }
             ],
             "title": "Request Count",
             "type": "timeseries"
+        },
+        {
+            "datasource": "Prometheus",
+            "fieldConfig": {
+                "defaults": {
+                    "color": {
+                        "mode": "palette-classic"
+                    },
+                    "mappings": [],
+                    "thresholds": {
+                        "mode": "absolute",
+                        "steps": [
+                            {
+                                "color": "green",
+                                "value": null
+                            },
+                            {
+                                "color": "red",
+                                "value": 5
+                            }
+                        ]
+                    }
+                },
+                "overrides": []
+            },
+            "gridPos": {
+                "h": 9,
+                "w": 12,
+                "x": 12,
+                "y": 0
+            },
+            "id": 2,
+            "options": {
+                "showHeader": true
+            },
+            "targets": [
+                {
+                    "expr": "request_errors_total",
+                    "format": "time_series",
+                    "interval": "",
+                    "legendFormat": "Total Errors",
+                    "refId": "A"
+                }
+            ],
+            "title": "Request Errors",
+            "type": "timeseries"
+        },
+        {
+            "datasource": "Prometheus",
+            "fieldConfig": {
+                "defaults": {
+                    "color": {
+                        "mode": "palette-classic"
+                    },
+                    "mappings": [],
+                    "thresholds": {
+                        "mode": "absolute",
+                        "steps": [
+                            {
+                                "color": "green",
+                                "value": null
+                            },
+                            {
+                                "color": "red",
+                                "value": 5
+                            }
+                        ]
+                    }
+                },
+                "overrides": []
+            },
+            "gridPos": {
+                "h": 9,
+                "w": 12,
+                "x": 0,
+                "y": 9
+            },
+            "id": 3,
+            "options": {
+                "showHeader": true
+            },
+            "targets": [
+                {
+                    "expr": "in_progress_requests",
+                    "format": "time_series",
+                    "interval": "",
+                    "legendFormat": "In Progress Requests",
+                    "refId": "A"
+                }
+            ],
+            "title": "In Progress Requests",
+            "type": "timeseries"
+        },
+        {
+            "datasource": "Prometheus",
+            "fieldConfig": {
+                "defaults": {
+                    "color": {
+                        "mode": "palette-classic"
+                    },
+                    "mappings": [],
+                    "thresholds": {
+                        "mode": "absolute",
+                        "steps": [
+                            {
+                                "color": "green",
+                                "value": null
+                            },
+                            {
+                                "color": "red",
+                                "value": 5
+                            }
+                        ]
+                    }
+                },
+                "overrides": []
+            },
+            "gridPos": {
+                "h": 9,
+                "w": 12,
+                "x": 12,
+                "y": 9
+            },
+            "id": 4,
+            "options": {
+                "showHeader": true
+            },
+            "targets": [
+                {
+                    "expr": "request_latency_seconds_sum / request_latency_seconds_count",
+                    "format": "time_series",
+                    "interval": "",
+                    "legendFormat": "Request Latency (seconds)",
+                    "refId": "A"
+                }
+            ],
+            "title": "Request Latency",
+            "type": "timeseries"
+        },
+        {
+            "datasource": "Prometheus",
+            "fieldConfig": {
+                "defaults": {
+                    "color": {
+                        "mode": "palette-classic"
+                    },
+                    "mappings": [],
+                    "thresholds": {
+                        "mode": "absolute",
+                        "steps": [
+                            {
+                                "color": "green",
+                                "value": null
+                            },
+                            {
+                                "color": "red",
+                                "value": 5
+                            }
+                        ]
+                    }
+                },
+                "overrides": []
+            },
+            "gridPos": {
+                "h": 9,
+                "w": 24,
+                "x": 0,
+                "y": 18
+            },
+            "id": 5,
+            "options": {
+                "showHeader": true
+            },
+            "targets": [
+                {
+                    "expr": "histogram_quantile(0.5, sum(rate(request_latency_seconds_histogram_bucket[5m])) by (le))",
+                    "format": "time_series",
+                    "interval": "",
+                    "legendFormat": "Request Latency Histogram",
+                    "refId": "A"
+                }
+            ],
+            "title": "Request Latency Histogram",
+            "type": "timeseries"
+        },
+        {
+            "datasource": "Prometheus",
+            "fieldConfig": {
+                "defaults": {
+                    "color": {
+                        "mode": "palette-classic"
+                    },
+                    "mappings": [],
+                    "thresholds": {
+                        "mode": "absolute",
+                        "steps": [
+                            {
+                                "color": "green",
+                                "value": null
+                            },
+                            {
+                                "color": "red",
+                                "value": 5
+                            }
+                        ]
+                    }
+                },
+                "overrides": []
+            },
+            "gridPos": {
+                "h": 6,
+                "w": 12,
+                "x": 0,
+                "y": 27
+            },
+            "id": 6,
+            "options": {
+                "showHeader": true
+            },
+            "targets": [
+                {
+                    "expr": "time() - api_uptime",
+                    "format": "time_series",
+                    "interval": "",
+                    "legendFormat": "API Uptime (seconds)",
+                    "refId": "A"
+                }
+            ],
+            "title": "API Uptime",
+            "type": "stat"
         }
     ],
     "schemaVersion": 30,
