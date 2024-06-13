@@ -1,7 +1,7 @@
 [ChatGPTiddy Thread](https://chatgpt.com/share/e0ab1cc3-5eef-4743-9620-f51fccf4e6d0)
 
 ### Prometheus Auth
-User: prom_admin
+User: prom_admin  
 PW: password
 
 To generate prometheus password
@@ -14,9 +14,9 @@ htpasswd -c nginx/conf.d/.htpasswd prom_admin
 ```
 
 ### Metrics Endpoint
-User: admin
+User: admin  
 PW: password
 
 ### Grafana Dashboard
-User: admin
+User: admin  
 PW: admin
